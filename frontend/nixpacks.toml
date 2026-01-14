@@ -3,15 +3,14 @@ nixPkgs = ["nodejs_20"]
 
 [phases.install]
 cmds = [
-  "npm install -g pnpm@latest",
-  "pnpm install --no-frozen-lockfile"
+  "npm ci"
 ]
 
 [phases.build]
-cmds = ["pnpm run build"]
+cmds = ["npm run build"]
 
 [start]
-cmd = "pnpm start"
+cmd = "npm start"
 
 [variables]
 NODE_ENV = "production"
