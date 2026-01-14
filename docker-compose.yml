@@ -4,8 +4,10 @@ services:
   api:
     image: evoapicloud/evo-ai:latest
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8000:8000"
     environment:
@@ -22,6 +24,7 @@ services:
       APP_URL: ${APP_URL}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
       DEBUG: ${DEBUG:-false}
+      ADMIN_INITIAL_PASSWORD: ${ADMIN_INITIAL_PASSWORD}
     volumes:
       - ./logs:/app/logs
       - ./static:/app/static
@@ -72,7 +75,7 @@ services:
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 5s
       timeout: 30s
       retries: 50
